@@ -1,27 +1,67 @@
 buildscript {
     repositories {
         jcenter()
+        maven { url 'http://repo.spring.io/plugins-release' }
     }
     dependencies {
         classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.3'
     }
 }
-
 plugins {
     id 'com.github.johnrengelman.shadow' version '2.0.0'
-
+    id "com.jfrog.artifactory" version "4.4.18"
 }
+
+artifactory {
+    contextUrl = "https://build.konsec.net/artifactory/"
+    //contextUrl = "${artifactory_contextUrl}"   //The base Artifactory URL if not overridden by the publisher/resolver
+    publish {
+        repository {
+            repoKey = 'ext-release-local'
+            username = "${artifactory_user}"
+            password = "${artifactory_password}"
+            maven = true
+
+        }
+
+    }
+    resolve {
+        contextUrl = "https://build.konsec.net/artifactory/"
+        repository {
+            repoKey = 'libs-release'
+            username = "${artifactory_user}"
+            password = "${artifactory_password}"
+            maven = true
+
+        }
+
+        repository {
+            repoKey = 'libs-snapshot'
+            username = "${artifactory_user}"
+            password = "${artifactory_password}"
+            maven = true
+
+        }
+
+
+    }
+}
+
 // Apply the java plugin to add support for Java
 apply plugin: 'java'
 apply plugin: 'com.google.protobuf'
 apply plugin: 'maven'
 apply plugin: 'idea'
+apply plugin: "com.jfrog.artifactory"
 
 group 'reprodcase'
 version '1.0-SNAPSHOT'
 setDescription("GRPCCLientTEst")
 sourceCompatibility = 1.8
-mainClassName='io.vertx.core.Launcher'
+//mainClassName='io.vertx.core.Launcher'
+
+
+
 shadowJar {
     classifier = 'fat'
     manifest {
@@ -33,6 +73,8 @@ shadowJar {
 }
 
 
+
+
 repositories {
     mavenCentral()
 }
@@ -42,9 +84,9 @@ def protobufDep = 'com.google.protobuf:protobuf-java:3.3.1'
 dependencies {// The production code uses the SLF4J logging API at compile time
     compile 'org.slf4j:slf4j-api:1.7.21'
     compile protobufDep
-    compile "io.vertx:vertx-grpc:3.4.2"
-    compile "io.vertx:vertx-core:3.4.2"
-    testCompile "io.vertx:vertx-unit:3.4.2"
+    compile( "io.vertx:vertx-grpc:3.5.1-SNAPSHOT") { changing = true }
+    compile( "io.vertx:vertx-core:3.5.1-SNAPSHOT") { changing = true }
+    testCompile ("io.vertx:vertx-unit:3.5.1-SNAPSHOT"){ changing = true }
     compile "com.google.guava:guava:23.0"
     compile "ch.qos.logback:logback-core:1.1.8"
     compile "ch.qos.logback:logback-classic:1.1.8"

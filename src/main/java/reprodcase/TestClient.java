@@ -17,7 +17,7 @@ public class TestClient {
 
     public static void main(String[] args) {
         try {
-            TestClient client = new TestClient("localhost", 8080);
+            TestClient client = new TestClient("localhost", 8980);
             System.out.println("Started");
             String s = client.get();
             System.out.println("Done:" + s);

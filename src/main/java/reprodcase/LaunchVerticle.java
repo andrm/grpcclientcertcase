@@ -66,7 +66,7 @@ public class LaunchVerticle extends AbstractVerticle {
         });
 
         VertxServer server = VertxServerBuilder.
-                forPort(vertx,  8080)
+                forPort(vertx,  8980)
                 //.useTransportSecurity(new File("TestServerChain.pem"),
                 //        new File("TestServer.pem"))
                 .useSsl(this::setOpts)
